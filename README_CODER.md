@@ -1,0 +1,9 @@
+生效时间参数表
+	RPM_PAR_DP_OP
+	RPM_PAR_EC
+	RPM_PAR_FTP
+	RPM_PAR_OC
+	RPM_PAR_PD
+	RPM_PAR_TAX
+
+

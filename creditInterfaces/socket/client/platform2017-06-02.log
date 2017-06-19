@@ -1,0 +1,90 @@
+[bigdata] 2017/06/02 14:43:57 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:43:57 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:43:57 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:43:57 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:43:57 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:43:57 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:45:03 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:45:03 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:45:03 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:45:03 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:45:03 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:45:03 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:45:15 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:45:15 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:45:15 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:45:15 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:45:15 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:45:15 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:47:36 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:47:36 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:47:36 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:47:36 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:47:36 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:47:36 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:48:03 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:48:03 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:48:03 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:48:03 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:48:03 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:48:03 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:48:22 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:48:22 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:48:22 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:48:22 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:48:22 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:48:22 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:48:58 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:48:58 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:48:58 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:48:58 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:48:58 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:48:58 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:50:04 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:50:04 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:50:04 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:50:04 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:50:04 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:50:04 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:52:23 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:52:23 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:52:23 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:52:23 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:52:23 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:52:23 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:53:13 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:53:13 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:53:13 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:53:13 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:53:13 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:53:13 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:53:36 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:53:36 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:53:36 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:53:36 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:53:36 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:53:36 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:54:38 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:54:38 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:54:38 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:54:38 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:54:38 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:54:38 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:55:50 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:55:50 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:55:50 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:55:50 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:55:50 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:55:50 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:56:47 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:56:47 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:56:47 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:56:47 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:56:47 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:56:47 [Info ] dbobj.go:48 default db is  oracle
+[bigdata] 2017/06/02 14:57:09 [Info ] oracle.go:176 oracle.go func init() > init oracle db
+[bigdata] 2017/06/02 14:57:09 [Info ] oracle.go:33 set NLS_LANG = AMERICAN_AMERICA.AL32UTF8
+[bigdata] 2017/06/02 14:57:09 [Info ] oracle.go:47 tnsname info is : 172.168.171.250:1521/APPDEV
+[bigdata] 2017/06/02 14:57:09 [Debug] oracle.go:54 create Oracle obj success.
+[bigdata] 2017/06/02 14:57:09 [Info ] dbobj.go:62 init default db ,which is  oracle
+[bigdatah] 2017/06/02 14:57:09 [Info ] dbobj.go:48 default db is  oracle

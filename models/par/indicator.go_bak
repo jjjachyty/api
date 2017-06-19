@@ -1,0 +1,426 @@
+package par
+
+import (
+	"database/sql"
+	"fmt"
+	"platform/dbobj"
+
+	"pccqcpa.com.cn/app/rpm/api/util"
+	// "strconv"
+	"regexp"
+	"strings"
+	"time"
+
+	"pccqcpa.com.cn/components/zlog"
+
+	modlesUtil "pccqcpa.com.cn/app/rpm/api/models/util"
+	// "encoding/json"
+)
+
+/**
+ * 指标CRUD，对应数据库表RPM_PAR_BASE_INDICATORS
+ */
+type Indicator struct {
+	Uuid                  string       //主键
+	IndicatorCode         string       //指标码值
+	IndicatorName         string       //指标名称
+	IndicatorType         string       //指标类型
+	IndicatorBeforeRely   []*Indicator //指标依赖
+	FormulaeCode          string       //指标公式
+	FormulaeCn            string       //指标公式中文
+	IndicatorBusinessType string       //业务类型
+	Flag                  string       //生效标志 0：停用 1:启用
+	CreateTime            time.Time    //指标创建时间
+	CreateUser            string       //指标创建人
+	UpdateTime            time.Time    //指标更新时间
+	UpdateUser            string       //指标更新人
+}
+
+var selectIndicatorSql string = `
+	select 
+		 t.uuid
+		,coalesce(t.indicator_code,' ')
+		,coalesce(t.indicator_name,' ')
+		,coalesce(t.indicator_type,' ')
+		,coalesce(t.indicator_before_rely,' ')
+		,coalesce(t.formulae_code,' ')
+		,coalesce(t.formulae_cn,' ')
+		,coalesce(t.flag,' ')
+		,coalesce(t.create_time,sysdate)
+		,coalesce(t.create_user,' ')
+		,coalesce(t.indicator_business_type,' ')
+		,coalesce(t.update_time,sysdate)
+		,coalesce(t.update_user,' ')
+	from rpm_par_base_indicators t
+`
+
+var selectIndicatorCols = map[string]string{
+	"uuid":                    "''",
+	"indicator_code":          "' '",
+	"indicator_name":          "' '",
+	"indicator_type":          "' '",
+	"indicator_before_rely":   "' '",
+	"formulae_code":           "' '",
+	"formulae_cn":             "' '",
+	"flag":                    "' '",
+	"create_time":             "sysdate",
+	"create_user":             "' '",
+	"indicator_business_type": "' '",
+	"update_time":             "sysdate",
+	"update_user":             "' '",
+}
+var selectIndicatorColsSort = []string{
+	"uuid",
+	"indicator_code",
+	"indicator_name",
+	"indicator_type",
+	"indicator_before_rely",
+	"formulae_code",
+	"formulae_cn",
+	"flag",
+	"create_time",
+	"create_user",
+	"indicator_business_type",
+	"update_time",
+	"update_user",
+}
+
+func selectIndicator(rows *sql.Rows) ([]*Indicator, error) {
+	var temp string
+	var rst []*Indicator
+	for rows.Next() {
+		var one Indicator
+		err := rows.Scan(
+			&one.Uuid,
+			&one.IndicatorCode,
+			&one.IndicatorName,
+			&one.IndicatorType,
+			&temp,
+			&one.FormulaeCode,
+			&one.FormulaeCn,
+			&one.Flag,
+			&one.CreateTime,
+			&one.CreateUser,
+			&one.IndicatorBusinessType,
+			&one.UpdateTime,
+			&one.UpdateUser,
+		)
+		if nil != err {
+			zlog.Error("查询指标rows.Scan()报错", err)
+			return nil, err
+		}
+		//判断是否存在依赖指标
+		var indicatorRely = make([]*Indicator, 0)
+		if util.SECOND_INDICATOR == one.IndicatorType && " " != temp && ",," != temp {
+			relys := strings.Split(temp, ",")
+			for i := 1; i < len(relys)-1; i++ {
+				//先从缓存中获取，如果缓存中没有，再去查数据库
+				rely := util.GetCache(relys[i])
+				if nil == rely {
+					zlog.Info("从数据库中获取", nil)
+					indicator, err := SelectIndicatorByCode(relys[i])
+					if nil != err {
+						zlog.Error("查询依赖指标报错", err)
+						indicator = new(Indicator)
+						indicator.IndicatorName = err.Error()
+					}
+					// fmt.Println("-----", indicator)
+					indicatorRely = append(indicatorRely, indicator)
+				} else {
+					zlog.Info("从缓存中获取["+rely.(*Indicator).IndicatorName+"]", nil)
+					indicatorRely = append(indicatorRely, rely.(*Indicator))
+				}
+			}
+		}
+		one.IndicatorBeforeRely = indicatorRely
+		util.PutCache(one.IndicatorCode, &one, 0) //放到缓存中
+		rst = append(rst, &one)
+	}
+	return rst, nil
+}
+
+//查询指标分页
+func SelectIndicatorByPage(paramMap map[string]interface{}) util.RstMsg {
+	tables := " rpm_par_base_indicators "
+
+	rsts, err := modlesUtil.SelectTableByPage(paramMap, tables, selectIndicatorCols, selectIndicatorColsSort)
+	if nil != err {
+		zlog.Error("查询指标分页错误", err)
+		return util.ErrorMsg("查询指标分页错误", err)
+	}
+	rows := rsts["Items"].(*sql.Rows)
+	rst, err := selectIndicator(rows)
+	if nil != err {
+		zlog.Error("查询指标分页rows.scan()出错", err)
+		return util.ErrorMsg("查询指标分页rows.scan()出错", err)
+	}
+	rsts["Items"] = rst
+	return util.RetrunSuccessPage("查询指标分页成功", rsts)
+	// return util.SuccessMsg("查询指标分页成功", rsts)
+}
+
+func SelectIndicatorByCode(indicatroCode string) (*Indicator, error) {
+	sql := selectIndicatorSql + ` where indicator_code = :1`
+	rows, err := dbobj.Default.Query(sql, indicatroCode)
+	defer rows.Close()
+	if nil != err {
+		zlog.Error("通过指标码值查询指标失败", err)
+		return nil, err
+	}
+
+	rst, err := selectIndicator(rows)
+	if nil != err {
+		zlog.Error("通过指标码值查询指标row.Scan()失败", err)
+		return nil, err
+	}
+	if 0 == len(rst) {
+		err := fmt.Errorf("数据库中没有指标码值为%s的纪录", indicatroCode)
+		zlog.Error("通过指标码值查询数据为空", err)
+		return nil, err
+	}
+	if 1 < len(rst) {
+		err := fmt.Errorf("数据库中指标码值为%s的纪录有%v条", indicatroCode, len(rst))
+		zlog.Error("通过指标码值查询数据有多条", err)
+		return nil, err
+	}
+	return rst[0], err
+}
+
+func SelectIndicatorByParams(paramMap map[string]interface{}) util.RstMsg {
+	tables := "rpm_par_base_indicators"
+
+	rows, err := modlesUtil.SelectTableByParams(paramMap, tables, selectIndicatorCols, selectIndicatorColsSort)
+	defer rows.Close()
+	if nil != err {
+		zlog.Error("多参数查询指标错误", err)
+		return util.ErrorMsg("多参数查询指标错误", err)
+	}
+	rst, err := selectIndicator(rows)
+	if nil != err {
+		zlog.Error("多参数查询指标row.Scan()错误", err)
+		return util.ErrorMsg("多参数查询指标row.Scan()错误", err)
+	}
+	return util.SuccessMsg("多参数查询指标成功", rst)
+}
+
+//先查询该码值是否唯一
+//如果唯一则添加
+//不唯一返回错误信息
+func AddIndicator(indicator *Indicator) util.RstMsg {
+	// var newIndicatorCode string = indicator.IndicatorCode + "_" + indicator.IndicatorBusinessType
+	var newIndicatorCode string = indicator.IndicatorCode
+	paramMap := map[string]interface{}{
+		"indicator_code": newIndicatorCode,
+	}
+	rst := SelectIndicatorByParams(paramMap)
+	if nil != rst.Err {
+		return rst
+	}
+	if nil != rst.Data && 0 < len(rst.Data.([]*Indicator)) {
+		var msg string = newIndicatorCode + "指标码值已经存在，不能新增"
+		zlog.Error(msg, nil)
+		return util.ErrorMsg(msg, nil)
+	}
+
+	var indicatorBeforeString string
+	if util.SECOND_INDICATOR == indicator.IndicatorType {
+		indicatorBeforeString = getIndicatoBeforeString(indicator.IndicatorBeforeRely)
+	} else if util.FIRST_INDICATOR == indicator.IndicatorType {
+		indicatorBeforeString = changeFormualToBefore(indicator.FormulaeCode)
+	}
+
+	sql := `
+		insert into rpm_par_base_indicators
+			(
+				 uuid
+				,indicator_code
+				,indicator_name
+				,indicator_type
+				,indicator_before_rely
+				,formulae_code
+				,formulae_cn
+				,indicator_business_type
+				,flag
+				,create_time
+				,create_user
+				,update_time
+				,update_user
+			)
+		values( sys_guid(), :1, :2, :3, :4, :5, :6, :7, :8,
+			to_date(:9,'YYYY-MM-DD hh24:mi:ss'), :10, 
+			to_date(:11,'YYYY-MM-DD hh24:mi:ss'), :12)
+	`
+
+	err := dbobj.Default.Exec(sql,
+		// indicator.IndicatorCode+"_"+indicator.IndicatorBusinessType,
+		indicator.IndicatorCode,
+		indicator.IndicatorName,
+		indicator.IndicatorType,
+		indicatorBeforeString,
+		indicator.FormulaeCode,
+		indicator.FormulaeCn,
+		indicator.IndicatorBusinessType,
+		indicator.Flag,
+		indicator.CreateTime.Format("2006-01-02 15:04:05"),
+		indicator.CreateUser,
+		indicator.UpdateTime.Format("2006-01-02 15:04:05"),
+		indicator.UpdateUser,
+	)
+	if nil != err {
+		zlog.Error("新增指标记录报错", err)
+		return util.ErrorMsg("新增指标记录报错", err)
+	}
+	util.PutCache(indicator.IndicatorCode, indicator, 0)
+	zlog.Info("新增指标进缓存", nil)
+	return util.SuccessMsg("新增指标成功", indicator)
+}
+
+//删除指标纪录
+//先判断是否有第一层或第二层引用，如果没有则删除
+//如果有引用，则不能删除
+func DeleteIndicatorByCode(indicatorCode string) util.RstMsg {
+	sql := `
+ 		SELECT count(1)  
+ 		  FROM RPM_PAR_BASE_INDICATORS T
+  		 WHERE T.INDICATOR_BEFORE_RELY LIKE '%%,` + indicatorCode + `,%%'
+	`
+	var count int
+	rows, err := dbobj.Default.Query(sql)
+	defer rows.Close()
+	if nil != err {
+		zlog.Info(sql, nil)
+		zlog.Error("删除指标报错，查询是否有其他指标引用该指标", err)
+		return util.ErrorMsg("删除指标报错，查询是否有其他指标引用该指标", err)
+	}
+	for rows.Next() {
+		err = rows.Scan(&count)
+		if nil != err {
+			zlog.Error("删除指标，查询是否有其他指标引用该指标row.Scan()报错", err)
+			return util.ErrorMsg("删除指标，查询是否有其他指标引用该指标row.Scan()报错", err)
+		}
+	}
+	if 0 < count {
+		err = fmt.Errorf("有其他指标在引用该指标，该指标不可以删除")
+		zlog.Error("有其他指标在引用该指标，该指标不可以删除", err)
+		return util.ErrorMsg("有其他指标在引用该指标，该指标不可以删除", err)
+	}
+	sql = `
+			delete from rpm_par_base_indicators t where t.indicator_code = :1
+		`
+	err = dbobj.Default.Exec(sql, indicatorCode)
+	if err != nil {
+		zlog.Error("删除指标纪录失败", err)
+		return util.ErrorMsg("删除指标纪录失败", err)
+	}
+
+	//从缓存中删除
+	util.DeleteCache(indicatorCode)
+	zlog.Info("删除指标成功", nil)
+	return util.SuccessMsg("删除指标成功", nil)
+}
+
+//修改指标
+//参数；指标结构体
+// 判断码值与业务类型是否存在
+func UpdateIndicatorByEntity(indicator *Indicator) util.RstMsg {
+	// 查询未修改的指标记录
+	var msg string
+	params := map[string]interface{}{
+		"uuid": indicator.Uuid,
+	}
+	rst := SelectIndicatorByParams(params)
+	if nil != rst.Err {
+		msg = "查询修改之前的指标失败"
+		zlog.Error(msg, rst.Err)
+		return util.ErrorMsg(msg, rst.Err)
+	}
+	var oldIndicator *Indicator = rst.PageData.Rows.([]*Indicator)[0]
+	// var newIndicatorCode string = strings.Split(indicator.IndicatorCode, "_")[0] + "_" + indicator.IndicatorBusinessType
+	var newIndicatorCode string = indicator.IndicatorCode
+	// 查询修改的记录是否存在
+	params = map[string]interface{}{
+		"indicator_code": newIndicatorCode,
+	}
+	rst = SelectIndicatorByParams(params)
+	if nil != rst.Err {
+		msg = "查询指标码值为" + newIndicatorCode + "指标记录失败"
+		zlog.Error(msg, rst.Err)
+		return util.ErrorMsg(msg, rst.Err)
+	}
+	if 0 < len(rst.PageData.Rows.([]*Indicator)) {
+		for _, v := range rst.PageData.Rows.([]*Indicator) {
+			if v.Uuid != oldIndicator.Uuid {
+				return util.ErrorMsg("编码为"+newIndicatorCode+"已经存在，不允许修改", nil)
+			}
+		}
+	}
+
+	var indicatorBeforeString string
+	if util.SECOND_INDICATOR == indicator.IndicatorType {
+		indicatorBeforeString = getIndicatoBeforeString(indicator.IndicatorBeforeRely)
+	} else if util.FIRST_INDICATOR == indicator.IndicatorType {
+		indicatorBeforeString = changeFormualToBefore(indicator.FormulaeCode)
+	}
+	sql := `
+		update rpm_par_base_indicators set
+				 indicator_code = :1
+				,indicator_name = :2
+				,indicator_type = :3
+				,indicator_before_rely = :4
+				,formulae_code = :5
+				,formulae_cn = :6
+				,indicator_business_type = :7
+				,flag = :8
+				,update_time = :9
+				,update_user = :10
+		where uuid = :11
+	`
+
+	err := dbobj.Default.Exec(sql,
+		newIndicatorCode,
+		indicator.IndicatorName,
+		indicator.IndicatorType,
+		indicatorBeforeString,
+		indicator.FormulaeCode,
+		indicator.FormulaeCn,
+		indicator.IndicatorBusinessType,
+		indicator.Flag,
+		indicator.UpdateTime,
+		indicator.UpdateUser,
+		indicator.Uuid,
+	)
+	if nil != err {
+		zlog.Error("修改指标纪录失败", err)
+		return util.ErrorMsg("修改指标纪录失败", err)
+	}
+	return util.SuccessMsg("更新指标成功", indicator)
+}
+
+func getIndicatoBeforeString(indicators []*Indicator) string {
+	var indicatorBeforeString string = ""
+	for _, v := range indicators {
+		indicatorBeforeString += v.Uuid + ","
+	}
+	if 0 < len(indicatorBeforeString) {
+		indicatorBeforeString = "," + indicatorBeforeString
+	}
+	return indicatorBeforeString
+}
+
+func changeFormualToBefore(formual string) string {
+	reg := regexp.MustCompile(`[,\+\-\\*\/\(\)]+[0-9]*.?[0-9]*[,\+\-\\*\/\(\)]+`)
+	return reg.ReplaceAllString(","+formual+",", ",")
+}
+
+func (indicator Indicator) FormulaToRely() string {
+	reg := regexp.MustCompile(`[,\+\-\\*\/\(\)]+`)
+	return reg.ReplaceAllString(","+indicator.FormulaeCode+",", ",")
+}
+
+func init() {
+	var paramMap = map[string]interface{}{}
+	rst := SelectIndicatorByParams(paramMap)
+	for _, indicator := range rst.PageData.Rows.([]*Indicator) {
+		util.PutCacheByCacheName(util.RPM_INDICATOR_CAHE, indicator.IndicatorCode, indicator, 0)
+	}
+}

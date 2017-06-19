@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LnPricingFiledCheck>
+  <Header>
+    <StringReauired>BusinessCode</StringReauired>
+    <StringReauired>UserCode</StringReauired>
+    <StringReauired>UserName</StringReauired>
+  </Header>
+  <CustInfo>
+    <StringReauired>CustCode</StringReauired>
+    <StringReauired>CustName</StringReauired>
+    <StringReauired>CustType</StringReauired>
+    <StringReauired>CustImplvl</StringReauired>
+    <StringReauired>CustCredit</StringReauired>
+    <StringReauired>Branch.OrganCode</StringReauired>
+    <StringReauired>Industry.IndustryCode</StringReauired>
+    <StringReauired>CustSize</StringReauired>
+    <StringReauired>Status</StringReauired>
+    <StringReauired>Owner</StringReauired>
+  </CustInfo>
+  <LnBusiness>
+    <StringReauired>Cust.CustCode</StringReauired>
+    <StringReauired>Organ.OrganCode</StringReauired>
+    <StringReauired>Product.ProductCode</StringReauired>
+    <StringReauired>Currency</StringReauired>
+    <StringReauired>Term</StringReauired>
+    <StringReauired>TermMult</StringReauired>
+    <StringReauired>RateType</StringReauired>
+    <StringReauired>RpymType</StringReauired>
+    <!-- <StringReauired>RepriceFreq</StringReauired> -->
+    <!-- <StringReauired>RpymCapitalFreq</StringReauired> -->
+    <StringReauired>Principal</StringReauired>
+    <StringReauired>BaseRateType</StringReauired>
+    <StringReauired>MainMortgageType</StringReauired>
+  </LnBusiness>
+  <Mort>
+    <StringReauired>MortgageCode</StringReauired>
+    <StringReauired>MortgageName</StringReauired>
+    <StringReauired>Currency</StringReauired>
+    <StringReauired>MortgageValue</StringReauired>
+  </Mort>
+  <Guarante>
+    <StringReauired>Guarante.CustCode</StringReauired>
+    <StringReauired>GuaranteType</StringReauired>
+  </Guarante>
+  <SceneDp>
+    <StringReauired>Product.ProductCode</StringReauired>
+    <StringReauired>Currency</StringReauired>
+    <!-- <StringReauired>Term</StringReauired> -->
+    <StringReauired>Rate</StringReauired>
+    <StringReauired>Value</StringReauired>
+  </SceneDp>
+  <SceneItd>
+    <StringReauired>Product.ProductCode</StringReauired>
+    <StringReauired>Value</StringReauired>
+  </SceneItd>
+  <LnPricing>
+    <StringReauired>IntRate</StringReauired>
+    <StringReauired>MarginType</StringReauired>
+    <!-- <StringReauired>MarginInt</StringReauired> -->
+  </LnPricing>
+</LnPricingFiledCheck>
